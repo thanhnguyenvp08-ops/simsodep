@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+<title>SIM STORE – Số Đẹp Giá Tốt</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --red:#E8001D; --red-dark:#b50016; --red-glow:rgba(232,0,29,0.25);
+  --gold:#FFD700; --bg:#0a0a0f; --bg2:#111118; --bg3:#18181f;
+  --surface:#1e1e28; --border:rgba(255,255,255,0.07);
+  --text:#f0f0f5; --muted:#7a7a90; --white:#ffffff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* TỐI ƯU LAYER HỆ THỐNG */
+html {
+  -webkit-text-size-adjust:100%;
+  touch-action: manipulation;
+  scroll-behavior: smooth;
+}
+body {
+  font-family:'Barlow',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:50;background:rgba(10,10,15,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 14px;height:54px}
+.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:10px;height:100%}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--white);text-decoration:none;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.logo span{color:var(--red)}
+.logo-icon{width:30px;height:30px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.header-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.stat-badge{display:flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 10px;font-size:12px;color:var(--muted);white-space:nowrap}
+.stat-badge strong{color:var(--text);font-weight:600}
+.dot-live{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 5px #22c55e;flex-shrink:0;animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+@media(max-width:380px){.stat-badge{display:none}}
+
+/* HERO */
+.hero{padding:36px 14px 28px;text-align:center}
+.hero-tag{display:inline-block;background:rgba(232,0,29,0.15);border:1px solid rgba(232,0,29,0.4);color:var(--red);font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-bottom:12px}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(38px,10vw,72px);font-weight:900;line-height:.95;text-transform:uppercase;color:var(--white)}
+.hero h1 em{color:var(--red);font-style:normal}
+.hero p{margin-top:10px;font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ADMIN BUTTON */
+.btn-admin-header{display:flex;align-items:center;gap:6px;background:rgba(232,0,29,0.1);border:1px solid rgba(232,0,29,0.3);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--red);cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn-admin-header.logged-in{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:#4ade80}
+
+.wrap{max-width:1200px;margin:0 auto;padding:0 12px}
+
+/* TABS NHÀ MẠNG */
+.label-sm{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.tabs-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -12px;padding:0 12px 4px}
+.tabs-scroll::-webkit-scrollbar{display:none}
+.tabs-row{display:flex;gap:7px;width:max-content}
+.tab-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;background:var(--surface);border:1px solid var(--border);font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:all .15s}
+.tab-btn.active{background:var(--red);border-color:var(--red);color:#fff}
+.tab-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.tab-dot.viettel{background:#d62828}.tab-dot.mobifone{background:#1d6fa4}
+.tab-dot.vinaphone{background:#e6a817}.tab-dot.vietnamobile{background:#7c3aed}.tab-dot.gmobile{background:#16a34a}
+
+/* TOOLBAR & INPUTS */
+.toolbar{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.search-wrap{position:relative}
+.search-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 12px 11px 38px;font-family:'Barlow',sans-serif;font-size:16px;color:var(--text);outline:none;-webkit-appearance:none;appearance:none}
+.search-input::placeholder{color:var(--muted);font-size:14px}
+.search-input:focus{border-color:rgba(232,0,29,0.5)}
+.filters-row{display:flex;gap:8px}
+.sel{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 30px 11px 11px;font-family:'Barlow',sans-serif;font-size:14px;color:var(--text);outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%237a7a90' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer;touch-action:manipulation}
+.sel option{background:var(--bg3)}
+
+/* RESULTS */
+.results-bar{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:10px}
+.results-bar strong{color:var(--text)}
+
+/* GRID CHỨA SIM */
+.sim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px}
+@media(min-width:600px){.sim-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:900px){.sim-grid{grid-template-columns:repeat(4,1fr);gap:14px}}
+
+/* FIX DELAY LEVEL 2: Ép Chip đồ họa GPU gánh tải hiển thị, triệt tiêu đơ lỳ trên các dòng Samsung */
+.sim-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  width: 100%;
+  font-family: 'Barlow', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  animation: fadeUp .2s ease-out both;
+  user-select: none;
+  outline: none;
+  will-change: transform, opacity;
+  transform: translate3d(0,0,0);
+  -webkit-transform: translate3d(0,0,0);
+}
+.sim-card:active {
+  border-color: rgba(232,0,29,0.6);
+  background: #22222e;
+  transform: scale3d(0.97, 0.97, 1);
+}
+@keyframes fadeUp{from{opacity:0;transform:translate3d(0,10px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+
+.net-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 7px;border-radius:4px;margin-bottom:8px}
+.nb-Viettel{background:rgba(214,40,40,0.15);color:#ff6b6b}
+.nb-Mobifone{background:rgba(29,111,164,0.15);color:#60abdf}
+.nb-Vinaphone{background:rgba(230,168,23,0.15);color:#fbbf24}
+.nb-Vietnamobile{background:rgba(124,58,237,0.15);color:#a78bfa}
+.nb-Gmobile{background:rgba(22,163,74,0.15);color:#4ade80}
+
+.sim-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(17px,4.5vw,24px);font-weight:900;letter-spacing:1.5px;color:var(--white);margin-bottom:2px;line-height:1.1;word-break:break-all}
+.sim-type{font-size:11px;color:var(--muted);margin-bottom:10px}
+.sim-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:6px}
+.sim-price{font-family:'Barlow Condensed',sans-serif;font-size:clamp(16px,4vw,20px);font-weight:700;color:var(--gold);line-height:1}
+.sim-price small{font-size:10px;color:var(--muted);display:block}
+.btn-buy{background:var(--red);color:#fff;border:none;border-radius:6px;padding:6px 11px;font-family:'Barlow',sans-serif;font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0;pointer-events:none}
+
+.empty{text-align:center;padding:50px 20px;color:var(--muted);grid-column:1/-1}
+.empty h3{font-size:16px;color:var(--text);margin:10px 0 6px}
+
+/* PAGINATION */
+.pgn-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:28px}
+.pgn{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.pg-btn{min-width:38px;height:38px;padding:0 8px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Barlow',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation;will-change:transform;transform:translate3d(0,0,0)}
+.pg-btn:active{transform:scale3d(0.92,0.92,1)}
+.pg-btn.active{background:var(--red);border-color:var(--red);color:#fff}
+
+/* MODAL DETAILED SHEET */
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:flex-end}
+.overlay[hidden]{display:none !important}
+.sheet{background:var(--bg3);border:1px solid rgba(255,255,255,0.1);border-radius:20px 20px 0 0;padding:20px 18px 32px;width:100%;position:relative;padding-bottom:max(32px,calc(24px + env(safe-area-inset-bottom)))}
+.sheet-handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,0.2);margin:0 auto 18px}
+.sheet-close{position:absolute;top:14px;right:14px;background:var(--surface);border:1px solid var(--border);border-radius:6px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:16px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.modal-num{text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:clamp(30px,8vw,42px);font-weight:900;letter-spacing:3px;color:var(--white);margin-bottom:4px}
+.modal-price{text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:var(--gold);margin-bottom:18px}
+.modal-rows{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px}
+.modal-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-size:13px;border-bottom:1px solid var(--border)}
+.modal-row:last-child{border-bottom:none}
+.modal-row .lbl{color:var(--muted)}
+.modal-row .val{color:var(--text);font-weight:500;text-align:right}
+.modal-btns{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border-radius:8px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;text-decoration:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;flex:1}
+.btn-red{background:var(--red);color:#fff}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+
+/* ADMIN LOGIN POPUP */
+.admin-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center}
+.admin-overlay[hidden]{display:none !important}
+.admin-sheet{background:var(--bg3);border:1px solid rgba(232,0,29,0.2);border-radius:20px 20px 0 0;padding:28px 22px;padding-bottom:max(28px,calc(20px + env(safe-area-inset-bottom)));width:100%;max-width:480px;margin:0 auto}
+.admin-ico{width:50px;height:50px;border-radius:12px;background:rgba(232,0,29,0.1);border:1px solid rgba(232,0,29,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 14px}
+.admin-sheet h2{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;text-align:center;color:var(--white);margin-bottom:4px}
+.admin-sheet>p{font-size:12px;color:var(--muted);text-align:center;margin-bottom:20px}
+.pw-wrap{position:relative;margin-bottom:12px}
+.pw-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.pw-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 14px 12px 40px;font-family:'Barlow',sans-serif;font-size:16px;color:var(--text);outline:none;-webkit-appearance:none;letter-spacing:2px}
+.pw-input::placeholder{letter-spacing:0;color:var(--muted)}
+.pw-input.err{border-color:#ef4444;animation:shake .35s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.err-msg{font-size:12px;color:#f87171;text-align:center;min-height:16px;margin-bottom:10px}
+.btn-login{width:100%;padding:13px;background:var(--red);color:#fff;border:none;border-radius:9px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.cancel-lnk{display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--muted);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:6px;touch-action:manipulation}
+
+/* EXCEL PANEL */
+#upload-section{display:none;margin-bottom:24px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px 14px}
+#upload-section.show{display:block}
+.upload-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.upload-ico{width:38px;height:38px;background:rgba(232,0,29,0.1);border:1px solid rgba(232,0,29,0.25);border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--red);flex-shrink:0}
+.upload-hdr h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700}
+.upload-hdr p{font-size:11px;color:var(--muted)}
+.btn-sm{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:7px 13px;font-family:'Barlow',sans-serif;font-size:12px;color:var(--text);cursor:pointer;margin-left:auto;-webkit-tap-highlight-color:transparent;touch-action:manipulation;white-space:nowrap}
+.drop-zone{border:2px dashed rgba(255,255,255,0.12);border-radius:9px;padding:28px 16px;text-align:center;cursor:pointer;position:relative}
+.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-zone svg{color:var(--muted);margin-bottom:8px}
+.drop-zone p{font-size:13px;color:var(--muted)}
+.drop-zone span{font-size:12px;color:var(--red);font-weight:600}
+.col-tags{margin-top:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:12px;font-size:12px;color:var(--muted);line-height:2}
+.ctag{display:inline-block;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1px 6px;font-size:11px;font-family:monospace;color:var(--gold);margin:1px}
+.upload-msg{margin-top:10px;padding:10px 13px;border-radius:7px;font-size:13px;font-weight:500;display:none}
+.upload-msg.ok{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:#4ade80;display:block}
+.upload-msg.fail{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#f87171;display:block}
+
+/* FIX STYLE BUTTON EXPORT: Đảm bảo hiển thị trỏ bàn tay chuẩn trên máy tính */
+.export-bar{display:none;margin-top:14px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:14px;gap:10px;flex-wrap:wrap;align-items:center}
+.export-bar.show{display:flex}
+.export-bar h4{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#4ade80;margin-bottom:2px}
+.export-bar p{font-size:11px;color:var(--muted)}
+.btn-export{background:#16a34a;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;margin-left:auto;display:inline-block;}
+
+/* FLOATING CHAT BALLOON */
+.chat-fab{position:fixed;bottom:20px;right:16px;z-index:100;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.chat-box{background:var(--bg3);border:1px solid rgba(255,255,255,0.1);border-radius:14px;width:min(270px,calc(100vw - 32px));box-shadow:0 16px 40px rgba(0,0,0,0.6);overflow:hidden;pointer-events:none;opacity:0;transform:scale(0.85) translateY(10px);transform-origin:bottom right;transition:all .22s cubic-bezier(0.34,1.56,0.64,1)}
+.chat-box.open{pointer-events:all;opacity:1;transform:scale(1) translateY(0)}
+.chat-hdr{background:linear-gradient(135deg,#E8001D,#a0001a);padding:14px;display:flex;align-items:center;gap:10px}
+.chat-av{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:17px;border:2px solid rgba(255,255,255,0.3);flex-shrink:0}
+.chat-hdr h4{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:1px}
+.chat-hdr p{font-size:10px;color:rgba(255,255,255,0.75)}
+.ch-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block;margin-right:3px;animation:pulse-dot 2s infinite}
+.chat-body{padding:14px}
+.chat-msg{background:var(--surface);border:1px solid var(--border);border-radius:8px 8px 8px 3px;padding:10px 12px;font-size:13px;color:var(--text);line-height:1.6;margin-bottom:12px}
+.chat-links{display:flex;flex-direction:column;gap:7px}
+.chat-lnk{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;border:1px solid var(--border);background:var(--surface);text-decoration:none;color:var(--text);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.chat-lnk.zalo{border-color:rgba(0,120,255,0.3)}
+.chat-lnk.fb{border-color:rgba(24,119,242,0.3)}
+.chat-lnk-ico{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.zalo .chat-lnk-ico{background:rgba(0,120,255,0.15)}
+.fb .chat-lnk-ico{background:rgba(24,119,242,0.15)}
+.chat-lnk strong{display:block;font-size:13px;font-weight:600}
+.chat-lnk span{font-size:11px;color:var(--muted)}
+.chat-foot{padding:9px 14px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);text-align:center}
+
+.fab-btn{width:52px;height:52px;border-radius:50%;background:var(--red);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px var(--red-glow);font-size:22px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;animation:fab-pulse 3s infinite}
+@keyframes fab-pulse{0%,100%{box-shadow:0 6px 18px var(--red-glow),0 0 0 0 rgba(232,0,29,0.35)}50%{box-shadow:0 6px 18px var(--red-glow),0 0 0 9px rgba(232,0,29,0)}}
+.fab-ico{transition:all .18s}
+.fab-ico-close{position:absolute;opacity:0;transform:rotate(90deg) scale(0.5);transition:all .18s;font-size:19px}
+.fab-btn.open .fab-ico{opacity:0;transform:rotate(-90deg) scale(0.5)}
+.fab-btn.open .fab-ico-close{opacity:1;transform:rotate(0) scale(1)}
+.fab-badge{position:absolute;top:-1px;right:-1px;width:15px;height:15px;border-radius:50%;background:#22c55e;border:2px solid var(--bg);font-size:8px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center}
+
+footer{border-top:1px solid var(--border);padding:20px 14px;text-align:center;font-size:12px;color:var(--muted)}
+footer strong{color:var(--red)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--bg3);border:1px solid var(--border);border-radius:22px;padding:10px 18px;font-size:13px;font-weight:500;color:var(--text);z-index:500;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,0.4);transition:transform .25s,opacity .25s;opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok{border-color:rgba(34,197,94,0.3);color:#4ade80}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo"><div class="logo-icon">📱</div>SIM<span>STORE</span></div>
+    <div class="header-right">
+      <div class="stat-badge"><div class="dot-live"></div>Đang bán: <strong id="totalCount">0</strong></div>
+      <button class="btn-admin-header" id="adminBtn" onclick="openAdmin(event)">🔒 <span id="adminLbl">Admin</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">🔥 Số đẹp – Giá tốt – Giao hàng toàn quốc</div>
+  <h1>Chọn Sim<br><em>Số Đẹp</em></h1>
+  <p>Hàng nghìn số đẹp từ tất cả nhà mạng. Lộc phát – Tứ quý – VIP.</p>
+</div>
+
+<div class="wrap" id="main">
+
+  <div id="upload-section">
+    <div class="upload-hdr">
+      <div class="upload-ico">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div><h3>Cập Nhật SIM</h3><p>Upload file Excel để cập nhật kho số</p></div>
+      <button class="btn-sm" onclick="dlTemplate(event)">⬇ File mẫu</button>
+    </div>
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" onchange="handleFile(this.files[0])">
+      <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p>Kéo thả file vào đây hoặc chạm để chọn</p>
+    </div>
+    <div class="col-tags">
+      <strong style="color:var(--text)">📋 Cột Excel cần có:</strong>
+      <span class="ctag">so_dien_thoai</span><span class="ctag">nha_mang</span><span class="ctag">loai_sim</span><span class="ctag">gia</span><span class="ctag">trang_thai</span><span class="ctag">ghi_chu</span>
+    </div>
+    <div class="upload-msg" id="uploadMsg"></div>
+    <div class="export-bar" id="exportBar">
+      <div>
+        <h4>Sẵn sàng xuất file!</h4>
+        <p>Lưu HTML tích hợp vĩnh viễn kho dữ liệu mới</p>
+      </div>
+      <button class="btn-export" id="btnExportSim">⬇ Xuất HTML</button>
+    </div>
+  </div>
+
+  <div class="label-sm">Chọn nhà mạng</div>
+  <div class="tabs-scroll">
+    <div class="tabs-row" id="tabsRow">
+      <div class="tab-btn active" data-net="all"><span class="tab-dot"></span>Tất cả</div>
+      <div class="tab-btn" data-net="Viettel"><span class="tab-dot viettel"></span>Viettel</div>
+      <div class="tab-btn" data-net="Mobifone"><span class="tab-dot mobifone"></span>Mobifone</div>
+      <div class="tab-btn" data-net="Vinaphone"><span class="tab-dot vinaphone"></span>Vinaphone</div>
+      <div class="tab-btn" data-net="Vietnamobile"><span class="tab-dot vietnamobile"></span>Vietnamobile</div>
+      <div class="tab-btn" data-net="Gmobile"><span class="tab-dot gmobile"></span>Gmobile</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-ico" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-input" id="searchInput" type="search" inputmode="search" placeholder="Nhập số cần tìm (hỗ trợ dấu *)..." autocomplete="off">
+    </div>
+    <div class="filters-row">
+      <select class="sel" id="sortSel">
+        <option value="">Sắp xếp</option>
+        <option value="pa">Giá thấp → cao</option>
+        <option value="pd">Giá cao → thấp</option>
+      </select>
+      <select class="sel" id="typeSel">
+        <option value="">Loại SIM</option>
+        <option>Tứ quý</option>
+        <option>Ngũ quý</option>
+        <option>Lộc phát</option>
+        <option>Taxi</option>
+        <option>Thường</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="results-bar">
+    <span>Tìm thấy <strong id="resCount">0</strong> số</span>
+  </div>
+
+  <div class="sim-grid" id="simGrid">
+    <div class="empty">
+      <h3>Chưa có dữ liệu SIM</h3>
+      <p>Bấm Admin đăng nhập để tải file Excel (.xlsx) lên kho</p>
+    </div>
+  </div>
+
+  <div id="pgnWrap" style="display:none">
+    <div class="pgn-wrap">
+      <div class="pgn" id="pgn"></div>
+      <div class="pg-info" id="pgInfo"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>SIMSTORE</strong> · Số đẹp giá tốt · Giao hàng toàn quốc<br>
+  <span style="display:block;margin-top:4px">Hotline liên hệ: <strong style="color:var(--text)">0357891997</strong></span>
+</footer>
+
+<div class="overlay" id="simOverlay" hidden>
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="closeSimModal(event)">✕</button>
+    <div class="modal-num" id="mNum">—</div>
+    <div class="modal-price" id="mPrice">—</div>
+    <div class="modal-rows">
+      <div class="modal-row"><span class="lbl">Nhà mạng</span><span class="val" id="mNet">—</span></div>
+      <div class="modal-row"><span class="lbl">Loại SIM</span><span class="val" id="mType">—</span></div>
+      <div class="modal-row"><span class="lbl">Trạng thái</span><span class="val" id="mStat">—</span></div>
+      <div class="modal-row"><span class="lbl">Ghi chú</span><span class="val" id="mNote">—</span></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeSimModal(event)">Đóng</button>
+      <button class="btn btn-red" id="simBuyBtn">🛒 Đặt mua ngay qua Zalo</button>
+    </div>
+  </div>
+</div>
+
+<div class="admin-overlay" id="adminOverlay" hidden>
+  <div class="admin-sheet">
+    <div class="sheet-handle" style="margin-bottom:20px"></div>
+    <div class="admin-ico">🔐</div>
+    <h2>Đăng Nhập Admin</h2>
+    <p>Nhập mật khẩu cấu hình quản trị hệ thống</p>
+    <div class="pw-wrap">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <input class="pw-input" id="pwInput" type="password" placeholder="Nhập mật khẩu...">
+    </div>
+    <div class="err-msg" id="pwErr"></div>
+    <button class="btn-login" onclick="doLogin(event)">🔓 Đăng nhập</button>
+    <span class="cancel-lnk" onclick="closeAdmin(event)">Huỷ bỏ</span>
+  </div>
+</div>
+
+<div class="chat-fab">
+  <div class="chat-box" id="chatBox">
+    <div class="chat-hdr">
+      <div class="chat-av">💬</div>
+      <div>
+        <h4>Tư vấn hỗ trợ trực tuyến</h4>
+        <p><span class="ch-dot"></span>Hỗ trợ 24/7</p>
+      </div>
+    </div>
+    <div class="chat-body">
+      <div class="chat-msg">Chào bạn! Bạn cần tìm dòng SIM gì, nhắn shop tư vấn nhanh nha:</div>
+      <div class="chat-links">
+        <a class="chat-lnk zalo" href="https://zalo.me/0357891997" target="_blank">
+          <div class="chat-lnk-ico">💙</div>
+          <div><strong>Zalo Chat</strong><span>Kết nối qua Zalo shop</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <button class="fab-btn" id="fabBtn">
+    <span class="fab-ico">💬</span>
+    <span class="fab-ico-close">✕</span>
+    <div class="fab-badge">1</div>
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script id="embData" type="application/json">[]</script>
+
+<script>
+var sims=[], filtered=[], curNet='all', curPage=1, PER_PAGE=12, isAdmin=false, selSim=null;
+var PASS='admin123'; // Mật khẩu quản trị chạy ngầm
+
+window.onload = function() {
+  try {
+    var d = JSON.parse(document.getElementById('embData').textContent);
+    if(d && d.length) {
+      sims = d;
+      applyFilter();
+      updateBadge();
+    }
+  } catch(e) {}
+};
+
+function openAdmin(e){
+  if(e) { e.preventDefault(); e.stopPropagation(); }
+  if(isAdmin){ logoutAdmin(); return; }
+  document.getElementById('adminOverlay').hidden=false;
+}
+function closeAdmin(e){
+  if(e) { e.preventDefault(); e.stopPropagation(); }
+  document.getElementById('adminOverlay').hidden=true;
+  document.getElementById('pwInput').value='';
+  document.getElementById('pwErr').textContent='';
+}
+function doLogin(e){
+  if(e) { e.preventDefault(); e.stopPropagation(); }
+  var pw=document.getElementById('pwInput').value;
+  if(pw===PASS){
+    isAdmin=true;
+    document.getElementById('adminBtn').classList.add('logged-in');
+    document.getElementById('adminLbl').textContent='Admin OK';
+    document.getElementById('upload-section').classList.add('show');
+    closeAdmin();
+    toast('✅ Đăng nhập Admin thành công');
+  } else {
+    document.getElementById('pwErr').textContent='Sai mật khẩu!';
+  }
+}
+function logoutAdmin(){
+  isAdmin=false;
+  document.getElementById('adminBtn').classList.remove('logged-in');
+  document.getElementById('adminLbl').textContent='Admin';
+  document.getElementById('upload-section').classList.remove('show');
+  location.reload();
+}
+
+document.getElementById('tabsRow').addEventListener('click', function(e){
+  var btn=e.target.closest('.tab-btn');
+  if(!btn)return;
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  curNet=btn.dataset.net;
+  curPage=1;
+  applyFilter();
+});
+
+var searchTimer;
+document.getElementById('searchInput').addEventListener('input', function(){
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(function(){curPage=1;applyFilter();},200);
+});
+document.getElementById('sortSel').addEventListener('change', function(){curPage=1;applyFilter();});
+document.getElementById('typeSel').addEventListener('change', function(){curPage=1;applyFilter();});
+
+// FIX LOGIC FILTER: Chuyển dấu * nhập từ bàn phím thành bộ lọc Regex tìm kiếm rải chuỗi thông minh
+function applyFilter(){
+  var q = document.getElementById('searchInput').value.toLowerCase().trim();
+  var sort = document.getElementById('sortSel').value;
+  var type = document.getElementById('typeSel').value;
+  
+  filtered = sims.filter(function(s){
+    if(curNet!=='all' && s.nha_mang!==curNet) return false;
+    if(type && s.loai_sim!==type) return false;
+    
+    if (q) {
+      var phoneStr = String(s.so_dien_thoai);
+      if (q.indexOf('*') !== -1) {
+        var regexStr = '^' + q.replace(/[\-\[\]\/\{\}\(\)\+\?\\\^\$\|]/g, "\\$&").replace(/\*/g, '.*') + '$';
+        if (q.startsWith('*')) regexStr = q.replace(/\*/g, '.*') + '$';
+        try {
+          var rx = new RegExp(regexStr);
+          return rx.test(phoneStr);
+        } catch(e) { return false; }
+      } else {
+        if (phoneStr.indexOf(q) === -1) return false;
+      }
+    }
+    return true;
+  });
+  
+  if(sort==='pa') filtered.sort(function(a,b){return Number(a.gia)-Number(b.gia)});
+  if(sort==='pd') filtered.sort(function(a,b){return Number(b.gia)-Number(a.gia)});
+  
+  renderGrid();
+}
+
+function updateBadge() {
+  document.getElementById('totalCount').textContent = sims.length;
+}
+
+// FIX DELAY LEVEL 3: Ép render tách tiến trình chống đơ màn hình khi cuộn lật trang số lượng lớn
+function renderGrid(){
+  var grid = document.getElementById('simGrid');
+  if(filtered.length === 0){
+    grid.innerHTML = '<div class="empty"><h3>Không tìm thấy SIM phù hợp</h3><p>Vui lòng đổi bộ lọc tìm kiếm.</p></div>';
+    document.getElementById('pgnWrap').style.display = 'none';
+    document.getElementById('resCount').textContent = '0';
+    return;
+  }
+  
+  document.getElementById('resCount').textContent = filtered.length;
+  var start = (curPage - 1) * PER_PAGE;
+  var end = start + PER_PAGE;
+  var pageItems = filtered.slice(start, end);
+  
+  var html = '';
+  pageItems.forEach(function(sim, index){
+    var globalIndex = start + index;
+    var rawGia = Number(sim.gia) || 0;
+    
+    html += '<div class="sim-card" role="button" tabindex="0" ' +
+              'ontouchstart="this.style.opacity=0.7;" ' +
+              'ontouchend="this.style.opacity=1; window.requestAnimationFrame(function(){ openSimModal('+globalIndex+'); }); event.preventDefault();" ' +
+              'onclick="if(!(\'ontouchstart\' in window)) openSimModal('+globalIndex+')">' +
+              '<span class="net-badge nb-'+sim.nha_mang+'">'+sim.nha_mang+'</span>' +
+              '<div class="sim-num">'+formatPhoneNumber(sim.so_dien_thoai)+'</div>' +
+              '<div class="sim-type">'+sim.loai_sim+'</div>' +
+              '<div class="sim-footer">' +
+                '<div class="sim-price">'+rawGia.toLocaleString('vi-VN')+'<small>đ</small></div>' +
+                '<span class="btn-buy">Mua</span>' +
+              '</div>' +
+            '</div>';
+  });
+  
+  grid.innerHTML = html;
+  renderPagination();
+}
+
+function formatPhoneNumber(num) {
+  var str = String(num).replace(/\D/g, '');
+  if(str.length === 10) return str.replace(/(\d{4})(\d{3})(\d{3})/, '$1.$2.$3');
+  return str;
+}
+
+function renderPagination(){
+  var totalPages = Math.ceil(filtered.length / PER_PAGE);
+  var pgn = document.getElementById('pgn');
+  if(totalPages <= 1){
+    document.getElementById('pgnWrap').style.display = 'none';
+    return;
+  }
+  document.getElementById('pgnWrap').style.display = 'block';
+  var html = '';
+  for(var i=1; i<=totalPages; i++){
+    var activeClass = (i === curPage) ? 'active' : '';
+    html += '<button class="pg-btn '+activeClass+'" ' +
+            'ontouchend="window.requestAnimationFrame(function(){ goToPage('+i+', event); }); event.preventDefault();" ' +
+            'onclick="if(!(\'ontouchstart\' in window)) goToPage('+i+', event)">'+i+'</button>';
+  }
+  pgn.innerHTML = html;
+  document.getElementById('pgInfo').textContent = 'Trang ' + curPage + ' / ' + totalPages;
+}
+
+function goToPage(p, e){
+  if(e) { e.preventDefault(); e.stopPropagation(); }
+  curPage = p;
+  renderGrid();
+  window.scrollTo({top: 240, behavior: 'smooth'});
+}
+
+function openSimModal(index){
+  selSim = filtered[index];
+  var priceNum = Number(selSim.gia) || 0;
+  document.getElementById('mNum').textContent = formatPhoneNumber(selSim.so_dien_thoai);
+  document.getElementById('mPrice').textContent = priceNum.toLocaleString('vi-VN') + ' đ';
+  document.getElementById('mNet').textContent = selSim.nha_mang;
+  document.getElementById('mType').textContent = selSim.loai_sim;
+  document.getElementById('mStat').textContent = selSim.trang_thai || 'Sẵn sàng giao';
+  document.getElementById('mNote').textContent = selSim.ghi_chu || 'Không có';
+  document.getElementById('simOverlay').hidden = false;
+}
+
+function closeSimModal(e){
+  if(e) { e.preventDefault(); e.stopPropagation(); }
+  document.getElementById('simOverlay').hidden = true;
+}
+
+document.getElementById('simBuyBtn').addEventListener('click', function(e){
+  e.preventDefault();
+  if(selSim){
+    var msg = 'Shop ơi, mình muốn mua số điện thoại này: ' + selSim.so_dien_thoai + ' (' + selSim.nha_mang + ')';
+    window.open('https://zalo.me/0909000000?text=' + encodeURIComponent(msg), '_blank');
+  }
+});
+
+var fab = document.getElementById('fabBtn');
+var chatBox = document.getElementById('chatBox');
+fab.addEventListener('click', function(e){
+  e.preventDefault();
+  fab.classList.toggle('open');
+  chatBox.classList.toggle('open');
+});
+
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')}, 2000);
+}
+
+function dlTemplate(e) {
+  if(e) e.preventDefault();
+  var data = [
+    ["so_dien_thoai", "nha_mang", "loai_sim", "gia", "trang_thai", "ghi_chu"], 
+    ["0909123456", "Viettel", "Tứ quý", "12000000", "Còn hàng", "Số nét đẹp"],
+    ["0912888999", "Vinaphone", "Lộc phát", "6500000", "Còn hàng", "Phong thủy tốt"]
+  ];
+  var ws = XLSX.utils.aoa_to_sheet(data);
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "KhoSim");
+  XLSX.writeFile(wb, "mau_excel_kho_sim.xlsx");
+}
+
+function handleFile(file){
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = new Uint8Array(e.target.result);
+      var workbook = XLSX.read(data, {type: 'array'});
+      var firstSheet = workbook.SheetNames[0];
+      var jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
+      
+      if(jsonData.length > 0 && jsonData[0].so_dien_thoai) {
+        sims = jsonData;
+        applyFilter();
+        updateBadge();
+        document.getElementById('uploadMsg').className = 'upload-msg ok';
+        document.getElementById('uploadMsg').textContent = '✅ Đã nhập cấu trúc ' + sims.length + ' sim thành công!';
+        document.getElementById('exportBar').classList.add('show');
+      } else {
+        throw new Error();
+      }
+    } catch(err) {
+      document.getElementById('uploadMsg').className = 'upload-msg fail';
+      document.getElementById('uploadMsg').textContent = '❌ Lỗi định dạng file! Vui lòng tải file mẫu để kiểm tra các trường dữ liệu tiêu đề.';
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// FIX LOGIC EXPORT: Ép làm sạch DOM, ẩn hẳn khối Admin và thu hồi thanh Excel về trạng thái gốc trước khi đóng gói HTML tải về
+document.getElementById('btnExportSim').addEventListener('click', function(e) {
+  if(e) { e.preventDefault(); e.stopPropagation(); }
+  if(!sims || sims.length === 0) {
+    toast('❌ Chưa có dữ liệu SIM để xuất!');
+    return;
+  }
+  
+  var currentHTML = document.documentElement.outerHTML;
+  var originalAdminBtn = '<button class="btn-admin-header" id="adminBtn" onclick="openAdmin(event)">🔒 <span id="adminLbl">Admin</span></button>';
+  var processedHTML = currentHTML;
+  
+  // Xóa class đăng nhập của nút header và ẩn panel admin trong file tải về
+  processedHTML = processedHTML.replace(/<button class="btn-admin-header logged-in" id="adminBtn"[\s\S]*?<\/button>/, originalAdminBtn);
+  processedHTML = processedHTML.replace('<div id="upload-section" class="show">', '<div id="upload-section">');
+  
+  // Đồng bộ đè nén data vào thẻ JSON script ngầm
+  var dataString = JSON.stringify(sims);
+  processedHTML = processedHTML.replace(/<script id="embData" type="application\/json">.*?<\/script>/, 
+    '<script id="embData" type="application/json">' + dataString + '<\/script>');
+  
+  var blob = new Blob([processedHTML], {type: "text/html;charset=utf-8"});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "kho_sim_store.html";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  
+  toast('💾 Đã xuất file HTML giao diện sạch cho khách!');
+});
+</script>
+</body>
+</html>
